@@ -152,7 +152,7 @@
 
 ##### org.apache.shiro.realm.Realm接口如下： 
 
-```
+```java
     String getName(); //返回一个唯一的Realm名字  
     boolean supports(AuthenticationToken token); //判断此Realm是否支持此Token  
     AuthenticationInfo getAuthenticationInfo(AuthenticationToken token)  
@@ -161,7 +161,7 @@
 ### 单Realm配置
 ##### 1、自定义Realm实现（com.github.zhangkaitao.shiro.chapter2.realm.MyRealm1）：  
 
-```
+```java
     public class MyRealm1 implements Realm {  
         @Override  
         public String getName() {  
@@ -190,7 +190,7 @@
 
 ### 2、ini配置文件指定自定义Realm实现(shiro-realm.ini)  
 
-```
+```ini
 #声明一个realm  
 myRealm1=com.github.zhangkaitao.shiro.chapter2.realm.MyRealm1  
 #指定securityManager的realms实现  
@@ -204,7 +204,7 @@ securityManager.realms=$myRealm1
 ## 多Realm配置
 ### 1、ini配置文件（shiro-multi-realm.ini）  
 
-```
+```ini
 #声明一个realm  
 myRealm1=com.github.zhangkaitao.shiro.chapter2.realm.MyRealm1  
 myRealm2=com.github.zhangkaitao.shiro.chapter2.realm.MyRealm2  
@@ -235,7 +235,7 @@ securityManager.realms=$myRealm1,$myRealm2
 ## JDBC Realm使用
 
 **1、数据库及依赖**
-```
+```xml
 <dependency>  
     <groupId>mysql</groupId>  
     <artifactId>mysql-connector-java</artifactId>  
@@ -253,7 +253,7 @@ securityManager.realms=$myRealm1,$myRealm2
 
 **3、ini配置（shiro-jdbc-realm.ini）**
 
-```
+```ini
 jdbcRealm=org.apache.shiro.realm.jdbc.JdbcRealm  
 dataSource=com.alibaba.druid.pool.DruidDataSource  
 dataSource.driverClassName=com.mysql.jdbc.Driver  
@@ -277,7 +277,7 @@ securityManager.realms=$jdbcRealm
 ##  2.6  Authenticator及AuthenticationStrategy 
 **Authenticator的职责是验证用户帐号，是Shiro API中身份验证核心的入口点：** 
 
-```
+```java
     public AuthenticationInfo authenticate(AuthenticationToken authenticationToken)  
                 throws AuthenticationException;   
 ```
@@ -305,7 +305,7 @@ securityManager.realms=$jdbcRealm
 ### 1、ini配置文件(shiro-authenticator-all-success.ini) 
 
 
-```
+```ini
     #指定securityManager的authenticator实现  
     authenticator=org.apache.shiro.authc.pam.ModularRealmAuthenticator  
     securityManager.authenticator=$authenticator  
@@ -325,7 +325,7 @@ securityManager.realms=$jdbcRealm
 ### 2.1、首先通用化登录逻辑 
 
 
-```
+```java
     private void login(String configFile) {  
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager  
         Factory<org.apache.shiro.mgt.SecurityManager> factory =  
@@ -344,7 +344,7 @@ securityManager.realms=$jdbcRealm
 ```
 ### 2.2、测试AllSuccessfulStrategy成功： 
 
-```
+```java
     @Test  
     public void testAllSuccessfulStrategyWithSuccess() {  
         login("classpath:shiro-authenticator-all-success.ini");  
@@ -360,7 +360,7 @@ securityManager.realms=$jdbcRealm
 ### 2.3、测试AllSuccessfulStrategy失败：
 
 
-```
+```java
 @Test(expected = UnknownAccountException.class)  
     public void testAllSuccessfulStrategyWithFail() {  
         login("classpath:shiro-authenticator-all-fail.ini");  
@@ -375,7 +375,7 @@ securityManager.realms=$jdbcRealm
 **自定义AuthenticationStrategy实现，首先看其API：**
 
 
-```
+```java
     //在所有Realm验证之前调用  
     AuthenticationInfo beforeAllAttempts(  
     Collection<? extends Realm> realms, AuthenticationToken token)   
